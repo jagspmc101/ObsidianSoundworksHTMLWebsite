@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Moving Hello</title>
+    <title>Obsidian SoundWorks</title>
     <!-- Add Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
     <style>
@@ -11,36 +11,113 @@
             margin: 0;
             height: 100vh;
             display: flex;
-            align-items: flex-start; /* Align items to the top */
-            justify-content: center; /* Center horizontally */
+            flex-direction: column; /* Stack elements vertically */
+            align-items: center; /* Center content */
             overflow: hidden; /* Prevent scrolling */
             background-image: url('ObsidianSoundWorksWebsiteBackground.png'); /* Background image */
-            background-size: cover; /* Keeps the entire image visible without zooming */
-            background-position: center; /* Centers the image */
-            background-repeat: no-repeat; /* Prevents the image from repeating */
-            background-color: #f0f0f0; /* Adds a fallback color */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-color: #f0f0f0;
         }
 
         .moving-text {
-            font-size: 3rem; /* Large font size */
-            font-family: 'Lobster', cursive; /* Fancy Google Font */
-            color: #ce6c57; /* Makes the text white */
-            text-shadow: 2px 2px 5px #8B0000; /* Adds a subtle black shadow */
+            font-size: 3rem;
+            font-family: 'Lobster', cursive;
+            color: #d3d3d3;
+            text-shadow: 2px 2px 5px #8B0000;
             position: relative;
-            animation: moveText 2s ease-in-out forwards; /* Animation */
+            animation: moveText 3s ease-in-out forwards;
         }
 
         @keyframes moveText {
-            0% {
-                transform: translateX(-100vw); /* Start from left out of view */
-            }
-            100% {
-                transform: translateX(0); /* End at center top */
-            }
+            0% { transform: translateX(-100vw); }
+            100% { transform: translateX(0); }
+        }
+
+        /* Samples Section Styling */
+        .samples-section {
+            margin-top: 150px; /* Pushes the section lower */
+            text-align: left; /* Aligns text to the left */
+            position: absolute;
+            left: 50px; /* Moves the section to the left */
+            bottom: 100px; /* Positions near the bottom */
+        }
+
+        .sample-label {
+            color: gray;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .sample-button {
+            background-color: #8B0000;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .sample-button:hover {
+            background-color: #600000;
+        }
+
+        /* New style for the "Stop Sample" button */
+        .stop-button {
+            background-color: gray;
+            color: black;
         }
     </style>
 </head>
 <body>
     <h1 class="moving-text">Obsidian SoundWorks</h1>
+
+    <!-- Samples Section -->
+    <div class="samples-section">
+        <p class="sample-label">Sample 1</p>
+        <button class="sample-button" id="sampleBtn1" onclick="toggleSample('SampleAudio1.mp3', 'sampleBtn1')">Play Sample</button>
+
+        <p class="sample-label">Sample 2</p>
+        <button class="sample-button" id="sampleBtn2" onclick="toggleSample('SampleAudio1.mp3', 'sampleBtn2')">Play Sample</button>
+    </div>
+
+    <script>
+        let currentAudio = null;
+
+        function toggleSample(audioFile, buttonId) {
+            const button = document.getElementById(buttonId);
+
+            // If there's an existing audio playing, stop it and reset the button
+            if (currentAudio && !currentAudio.paused) {
+                currentAudio.pause();
+                currentAudio.currentTime = 0;
+                resetButton(button);
+                currentAudio = null;
+                return;
+            }
+
+            // Create new audio instance
+            currentAudio = new Audio(audioFile);
+            currentAudio.play();
+
+            // Change button appearance to "Stop Sample"
+            button.textContent = "Stop Sample";
+            button.classList.add("stop-button");
+
+            // Reset button when audio ends
+            currentAudio.onended = function () {
+                resetButton(button);
+                currentAudio = null;
+            };
+        }
+
+        function resetButton(button) {
+            button.textContent = "Play Sample";
+            button.classList.remove("stop-button");
+        }
+    </script>
 </body>
 </html>
